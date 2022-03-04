@@ -55,7 +55,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		DiscordClient.changePresence(rpcTitle, null);
 		#end
 		
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBG'));
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg.color = 0xFFea71fd;
 		bg.setGraphicSize(Std.int(bg.width * 1.1));
 		bg.updateHitbox();
 		bg.screenCenter();
@@ -100,12 +101,14 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			grpOptions.add(optionText);
 
 			if(optionsArray[i].type == 'bool') {
-				var checkbox:CheckboxThingie = new CheckboxThingie(optionText.x - 105, optionText.y, false);
+				var checkbox:CheckboxThingie = new CheckboxThingie(optionText.x - 105, optionText.y, optionsArray[i].getValue() == true);
 				checkbox.sprTracker = optionText;
 				checkbox.ID = i;
 				checkboxGroup.add(checkbox);
 			} else {
-				var valueText:AttachedText = new AttachedText(optionsArray[i].getValue(), optionText.width + 80);
+				optionText.x -= 80;
+				optionText.xAdd -= 80;
+				var valueText:AttachedText = new AttachedText('' + optionsArray[i].getValue(), optionText.width + 80);
 				valueText.sprTracker = optionText;
 				valueText.copyAlpha = true;
 				valueText.ID = i;
@@ -122,6 +125,10 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		changeSelection();
 		reloadCheckboxes();
+
+		#if mobileC
+        addVirtualPad(FULL, A_B);
+        #end
 	}
 
 	public function addOption(option:Option) {
@@ -144,7 +151,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		}
 
 		if (controls.BACK) {
-			close();
+			MusicBeatState.resetState();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 
@@ -188,10 +195,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 											holdValue = Math.round(holdValue);
 											curOption.setValue(holdValue);
 
-										case 'percent':
+										case 'float' | 'percent':
 											holdValue = FlxMath.roundDecimal(holdValue, curOption.decimals);
-											curOption.setValue(holdValue);
-										case 'float':
 											curOption.setValue(holdValue);
 									}
 
@@ -208,7 +213,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 									curOption.curOption = num;
 									curOption.setValue(curOption.options[num]); //lol
-									trace(curOption.options[num]);
+									//trace(curOption.options[num]);
 							}
 							updateTextFrom(curOption);
 							curOption.change();
@@ -223,10 +228,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 								case 'int':
 									curOption.setValue(Math.round(holdValue));
 								
-								case'percent':
+								case 'float' | 'percent':
 									curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
-								case 'float':
-									curOption.setValue(holdValue);
 							}
 							updateTextFrom(curOption);
 							curOption.change();
@@ -237,9 +240,28 @@ class BaseOptionsMenu extends MusicBeatSubstate
 						holdTime += elapsed;
 					}
 				} else if(controls.UI_LEFT_R || controls.UI_RIGHT_R) {
-					if (curOption.name != 'Scroll Speed')
-						clearHold();
+					clearHold();
 				}
+			}
+
+			if(controls.RESET)
+			{
+				for (i in 0...optionsArray.length)
+				{
+					var leOption:Option = optionsArray[i];
+					leOption.setValue(leOption.defaultValue);
+					if(leOption.type != 'bool')
+					{
+						if(leOption.type == 'string')
+						{
+							leOption.curOption = leOption.options.indexOf(leOption.getValue());
+						}
+						updateTextFrom(leOption);
+					}
+					leOption.change();
+				}
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				reloadCheckboxes();
 			}
 		}
 

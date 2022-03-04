@@ -31,65 +31,30 @@ class VisualsUISubState extends BaseOptionsMenu
 {
 	public function new()
 	{
-		title = 'Visuals and UI';
+		title = 'Custom Options';
 		rpcTitle = 'Visuals & UI Settings Menu'; //for Discord Rich Presence
 
-		var option:Option = new Option('Note Splashes',
-			"If unchecked, hitting \"Sick!\" notes won't show particles.",
-			'noteSplashes',
-			'bool',
-			true);
-		addOption(option);
-
-		var option:Option = new Option('Score Type:',
-			"What should the score be like?",
+		var option:Option = new Option('Score Type:',                                                                  
+			"What should be the score type?",
                         'scoreType',
                         'string',
-                        'Kade Engine',
+                        'Psych Engine',
                         ['Psych Engine', 'Kade Engine', 'Disabled']);
                 addOption(option);
 
 		var option:Option = new Option('Memory Counter',
-			'If checked, enables memory counter.',
+			'If unchecked, disables memory counter.',
                         'memoryCounter',
                         'bool',
-                        false);
+                        true);
                 addOption(option);
 		option.onChange = onChangeMemoryCounter;
-/*
-		var option:Option = new Option('Dynamic Cam',
-                        'If checked, enables dynamic cam movement it only works with vanilla FNF!.',
-                        'dynamicCam',
-                        'bool',
-                        false);
-                addOption(option); //not working
-*/
-		var option:Option = new Option('Play Hit Sounds',
-                        'If checked, enables hit sounds.',
-                        'playHitSounds',
-                        'bool',
-                        false);
-                addOption(option);
-
-		var option:Option = new Option('Icon Boping',
-                        'If checked, enables icon Boping.',
-                        'iconBoping',
-                        'bool',
-                        false);
-                addOption(option);
-
-		var option:Option = new Option('Hide HUD',
-			'If checked, hides most HUD elements.',
-			'hideHud',
-			'bool',
-			false);
-		addOption(option);
 
 		var option:Option = new Option('Health Counter',
-                        'If checked, enables the health counter.',
+                        'If unchecked, hides the health counter.',
                         'healthCounter',
                         'bool',
-                        false);
+                        true);
                 addOption(option);
 		
 		var option:Option = new Option('Time Bar:',
@@ -100,25 +65,19 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Time Left', 'Time Elapsed', 'Song Name', 'Disabled']);
 		addOption(option);
 
-		var option:Option = new Option('Flashing Lights',
-			"Uncheck this if you're sensitive to flashing lights!",
-			'flashing',
-			'bool',
-			true);
-		addOption(option);
-
-		var option:Option = new Option('Camera Zooms',
-			"If unchecked, the camera won't zoom in on a beat hit.",
-			'camZooms',
-			'bool',
-			true);
-		addOption(option);
 
 		var option:Option = new Option('Judgements',
                         'If unchecked, hides judgements.',
                         'judgements',
                         'bool',
-                        false);
+                        true);
+                addOption(option);
+
+		var option:Option = new Option('No Antimash',
+                        'If checked, disables antimash.',
+                        'noAntimash',
+                        'bool',
+                        true);
                 addOption(option);
 		
 		var option:Option = new Option('KE Timebar',
@@ -127,7 +86,6 @@ class VisualsUISubState extends BaseOptionsMenu
                         'bool',
                         false);
                 addOption(option);
-
 		var option:Option = new Option('Health Bar Opacity',
 			'How Opaque should the health bar and icons be.',
 			'healthBarAlpha',
@@ -151,7 +109,7 @@ class VisualsUISubState extends BaseOptionsMenu
                 option.changeValue = 0.1;
 		option.decimals = 1;
                 addOption(option);
-/*
+
 		var option:Option = new Option('Lane Opacity',
                         'How Opaque should the lane underlay be.',
                         'laneOpacity',
@@ -175,7 +133,7 @@ class VisualsUISubState extends BaseOptionsMenu
                 option.changeValue = 0.1;
                 option.decimals = 1;
                 addOption(option);
-*/
+
                 var option:Option = new Option('Enemy Arrows Opacity',
                         'How Opaque should the opponent arrows be.',
                         'opponentArrowOpacity',

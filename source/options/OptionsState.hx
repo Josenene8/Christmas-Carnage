@@ -29,32 +29,36 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Note Colors', 'Controls', 'Graphics', 'Visuals and UI', 'Christmas Tree'];
+	var options:Array<String> = ['Controls', 'Mobile Controls', 'Graphics', 'Visuals and UI', 'Gameplay'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
 
 	function openSelectedSubstate(label:String) {
 		switch(label) {
-			case 'Note Colors':
-				openSubState(new options.NotesSubState());
 			case 'Controls':
 				openSubState(new options.ControlsSubState());
 			case 'Graphics':
 				openSubState(new options.GraphicsSettingsSubState());
 			case 'Visuals and UI':
 				openSubState(new options.VisualsUISubState());
-			case 'Christmas Tree':
-				openSubState(new options.TreeSubState());
+			case 'Gameplay':
+				openSubState(new options.GameplaySettingsSubState());
+			case 'Mobile Controls':
+				MusicBeatState.switchState(new options.CustomControlsState());				
 		}
 	}
+
+	var selectorLeft:Alphabet;
+	var selectorRight:Alphabet;
 
 	override function create() {
 		#if desktop
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBG'));
+		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg.color = 0xFFea71fd;
 		bg.setGraphicSize(Std.int(bg.width * 1.1));
 		bg.updateHitbox();
 		bg.screenCenter();
@@ -71,7 +75,17 @@ class OptionsState extends MusicBeatState
 			optionText.y += (100 * (i - (options.length / 2))) + 50;
 			grpOptions.add(optionText);
 		}
+
+		selectorLeft = new Alphabet(0, 0, '>', true, false);
+		add(selectorLeft);
+		selectorRight = new Alphabet(0, 0, '<', true, false);
+		add(selectorRight);
+
 		changeSelection();
+
+		#if mobileC
+                addVirtualPad(UP_DOWN, A_B);
+                #end
 
 		super.create();
 	}
@@ -117,7 +131,12 @@ class OptionsState extends MusicBeatState
 			item.alpha = 0.6;
 			if (item.targetY == 0) {
 				item.alpha = 1;
+				selectorLeft.x = item.x - 63;
+				selectorLeft.y = item.y;
+				selectorRight.x = item.x + item.width + 15;
+				selectorRight.y = item.y;
 			}
 		}
+		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 }

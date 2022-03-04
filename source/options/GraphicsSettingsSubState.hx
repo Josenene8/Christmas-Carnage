@@ -32,7 +32,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 	public function new()
 	{
 		title = 'Graphics';
-		rpcTitle = 'Graphics Menu'; //for Discord Rich Presence
+		rpcTitle = 'Graphics Settings Menu'; //for Discord Rich Presence
 
 		//I'd suggest using "Low Quality" as an example for making your own option since it is the simplest here
 		var option:Option = new Option('Low Quality', //Name
@@ -42,12 +42,13 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 			false); //Default value
 		addOption(option);
 
-		var option:Option = new Option('Camera Movement', //Name
-		'Camera moves with animations.', //Description
-		'cameraMovement', //Save data variable name
-		'bool', //Variable type
-		true); //Default value
-		addOption(option);
+//		var option:Option = new Option('No Bg', //Name
+//                        'If checked, removes the background.', //Description
+//                        'noBg', //Save data variable name
+//                       'bool', //Variable type
+//                        false); //Default value
+//                addOption(option);
+//	No Anda :(
 
 		var option:Option = new Option('Anti-Aliasing',
 			'If unchecked, disables anti-aliasing, increases performance\nat the cost of sharper visuals.',
@@ -78,17 +79,17 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 			false);
 		option.onChange = onChangePersistentData; //Persistent Cached Data changes FlxGraphic.defaultPersist
 		addOption(option);
+
 		super();
 	}
 
 	function onChangeAntiAliasing()
 	{
-		for (i in 0...members.length)
+		for (sprite in members)
 		{
-			var obj:Dynamic = members[i]; //Don't judge me for this ok
-			var sprite:FlxSprite = obj; //Dumb but works lol
-			var isText:FlxText = obj; //Don't change texts antialiasing
-			if(sprite != null && isText == null) {
+			var sprite:Dynamic = sprite; //Make it check for FlxSprite instead of FlxBasic
+			var sprite:FlxSprite = sprite; //Don't judge me ok
+			if(sprite != null && (sprite is FlxSprite) && !(sprite is FlxText)) {
 				sprite.antialiasing = ClientPrefs.globalAntialiasing;
 			}
 		}
