@@ -206,8 +206,6 @@ class VisualsUISubState extends BaseOptionsMenu
 	}
 
 	function onChangeMemoryCounter()
-        {
-                if(Main.memoryCounter != null)
-                        Main.memoryCounter.visible = ClientPrefs.memoryCounter;
+	
         }	
 }
