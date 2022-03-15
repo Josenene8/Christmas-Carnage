@@ -8,6 +8,8 @@ import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
+import sys.FileSystem;
+import lime.app.Application;
 import lime.system.System;
 
 class Main extends Sprite
@@ -19,11 +21,25 @@ class Main extends Sprite
 	var framerate:Int = 60; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
-	public static var fpsVar:FPS;
-	
-	public static var path:String = System.applicationStorageDirectory;	
 
-	// You can pretty much ignore everything from here on - your code should go in your states.
+	public static var fpsVar:FPS;
+
+	private static var dataPath:String = null;
+
+        static public function getDataPath():String 
+        {
+            #if android
+            if (dataPath != null && dataPath.length > 0) 
+            {
+                return dataPath;
+            } 
+            else 
+            {
+                 dataPath = "/storage/emulated/0/Android/data/" + Application.current.meta.get("packageName") + "/files/";
+            }
+            return dataPath;
+            #end
+        }
 
 	public static function main():Void
 	{
@@ -72,8 +88,36 @@ class Main extends Sprite
 		initialState = TitleState;
 		#end
 
-		ClientPrefs.startControls();
-		
+                #if android
+
+                if (!FileSystem.exists("/storage/emulated/0/Android/data/" + Application.current.meta.get("packageName")))
+                {
+                    Application.current.window.alert("Try creating A folder Called " + Application.current.meta.get("packageName") + " in Android/data/" + "\n" + "Press Ok To Close The App", "Check Directory Error");
+                    System.exit(0);//Will close the game
+                }
+                else if (!FileSystem.exists("/storage/emulated/0/Android/data/" + Application.current.meta.get("packageName") + "/files"))
+                {
+                    Application.current.window.alert("Try creating A folder Called Files in Android/data/" + Application.current.meta.get("packageName") + "\n" + "Press Ok To Close The App", "Check Directory Error");
+                    System.exit(0);//Will close the game
+                }
+                else if (!FileSystem.exists(Main.getDataPath() + "assets"))
+                {
+                    Application.current.window.alert("Try copying assets/assets from apk to " + " /storage/emulated/0/Android/data/" + Application.current.meta.get("packageName") + "/files/" + "\n" + "Press Ok To Close The App", "Check Directory Error");
+                    System.exit(0);//Will close the game
+                }
+                else if (!FileSystem.exists(Main.getDataPath() + "mods"))
+                {
+                    Application.current.window.alert("Try copying assets/mods from apk to " + " /storage/emulated/0/Android/data/" + Application.current.meta.get("packageName") + "/files/" + "\n" + "Press Ok To Close The App", "Check Directory Error");
+                    System.exit(0);//Will close the game
+                }
+                else
+                {
+                    if (!FileSystem.exists(Main.getDataPath() + "yourthings"))
+	            FileSystem.createDirectory(Main.getDataPath() + "yourthings");                   
+                }
+                #end
+
+		ClientPrefs.loadDefaultKeys();
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
 
 		fpsVar = new FPS(10, 3, 0xFFFFFF);
@@ -81,12 +125,6 @@ class Main extends Sprite
 		if(fpsVar != null) {
 			fpsVar.visible = ClientPrefs.showFPS;
 		}
-
-		var memoryCounter = new MemoryCounter(10, 3, 0xFFFFFF);
-                addChild(memoryCounter);
-                if(memoryCounter != null) {
-                        memoryCounter.visible = ClientPrefs.memoryCounter;
-                }
 
 		#if html5
 		FlxG.autoPause = false;
