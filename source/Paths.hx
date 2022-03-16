@@ -118,7 +118,7 @@ class Paths
 
 	inline static public function lua(key:String, ?library:String)
 	{
-		return Main.path + getPath('$key.lua', TEXT, library);
+		
 	}
 
 	inline static public function luaAsset(key:String, ?library:String)
@@ -186,7 +186,7 @@ class Paths
 
 	inline static public function getSparrowAtlaslua(key:String, ?library:String)
 	{
-		return FlxAtlasFrames.fromSparrow(image(key, library), file(Main.path + 'images/$key.xml', library));
+		
 	}
 
 	inline static public function getPackerAtlas(key:String, ?library:String)
