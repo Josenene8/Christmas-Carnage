@@ -206,8 +206,7 @@ class MainMenuState extends MusicBeatState
 										FlxG.sound.music.volume = 0;
 									case 'freeplay':
 										MusicBeatState.switchState(new FreeplayState());
-									case 'mods':
-										MusicBeatState.switchState(new ModsMenuState());
+									
 									case 'awards':
 										MusicBeatState.switchState(new AchievementsMenuState());
 									case 'credits':
