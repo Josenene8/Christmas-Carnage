@@ -93,7 +93,7 @@ class Paths
 
 	inline public static function getPreloadPathlua(file:String = '')
 	{
-		return Main.path + 'assets/$file';
+		
 	}
 
 	inline static public function file(file:String, type:AssetType = TEXT, ?library:String)
