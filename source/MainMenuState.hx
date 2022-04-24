@@ -115,9 +115,7 @@ class MainMenuState extends MusicBeatState
 		#end
 		*/
 		
-		#if mobileC
-		addVirtualPad(FULL, A_B);
-		#end
+		
 			
 		super.create();
 	}
@@ -130,7 +128,11 @@ class MainMenuState extends MusicBeatState
 		trace('Giving achievement "friday_night_play"');
 	}
 	#end
-
+		
+        #if mobileC
+	addVirtualPad(FULL, A_B);
+	#end
+			
 	var selectedSomethin:Bool = false;
 
 	override function update(elapsed:Float)
